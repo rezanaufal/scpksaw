@@ -12,31 +12,34 @@
 */
 
 
+Route::get('/tes', 'analisaTopsis@get_positif_distance');
+Route::get('/awa', function(){
+    return "ADADAW"
+});
 
-Route::get('/tes','analisaTopsis@get_positif_distance'); 
-Route::get('/tes2',function(){
+Route::get('/tes2', function () {
     $users = DB::table('mahasiswa')->select(DB::raw('SUM(prestasi) as jumlah'))->first();
     return $users->jumlah;
 });
-Route::group(['as' =>'admin.','middleware'=> 'auth'],function(){
+Route::group(['as' => 'admin.', 'middleware' => 'auth'], function () {
     Route::get('/', function () {
         $data['mahasiswa'] = count(\App\Model\Mahasiswa::all());
-        $data['fmipa'] = count(\App\Model\Mahasiswa::where('fakultas','FMIPA')->get());
-        $data['ft'] = count(\App\Model\Mahasiswa::where('fakultas','FT')->get());
-        $data['fbs'] = count(\App\Model\Mahasiswa::where('fakultas','FBS')->get());
-        $data['fik'] = count(\App\Model\Mahasiswa::where('fakultas','FIK')->get());
-        $data['fe'] = count(\App\Model\Mahasiswa::where('fakultas','FE')->get());
-        $data['fis'] = count(\App\Model\Mahasiswa::where('fakultas','FIS')->get());
-        $data['fip'] = count(\App\Model\Mahasiswa::where('fakultas','FIP')->get());
-        $data['fh'] = count(\App\Model\Mahasiswa::where('fakultas','FH')->get());
-        return view('admin.dashboard',$data);
+        $data['fmipa'] = count(\App\Model\Mahasiswa::where('fakultas', 'FMIPA')->get());
+        $data['ft'] = count(\App\Model\Mahasiswa::where('fakultas', 'FT')->get());
+        $data['fbs'] = count(\App\Model\Mahasiswa::where('fakultas', 'FBS')->get());
+        $data['fik'] = count(\App\Model\Mahasiswa::where('fakultas', 'FIK')->get());
+        $data['fe'] = count(\App\Model\Mahasiswa::where('fakultas', 'FE')->get());
+        $data['fis'] = count(\App\Model\Mahasiswa::where('fakultas', 'FIS')->get());
+        $data['fip'] = count(\App\Model\Mahasiswa::where('fakultas', 'FIP')->get());
+        $data['fh'] = count(\App\Model\Mahasiswa::where('fakultas', 'FH')->get());
+        return view('admin.dashboard', $data);
     });
     Route::get('/', function () {
         return view('admin.mahasiswa.index');
     });
     Route::get('/asetting', function () {
         $options = \App\Model\Setting::getAllKeyValue();
-        return view('admin.setting',$options);
+        return view('admin.setting', $options);
     });
     Route::get('/alinguistik', function () {
         return view('admin.topsis.linguistik');
@@ -62,9 +65,9 @@ Route::group(['as' =>'admin.','middleware'=> 'auth'],function(){
     Route::get('/ahasil_rekomendasi', function () {
         return view('admin.topsis.hasil_rekomendasi');
     });
-    Route::get('/amatrix_solusi_ideal','analisaTopsis@solusi_ideal');
+    Route::get('/amatrix_solusi_ideal', 'analisaTopsis@solusi_ideal');
 
-    Route::group(['prefix' => 'admin'], function(){
+    Route::group(['prefix' => 'admin'], function () {
         Route::group(["as" => "mahasiswa.", "prefix" => "mahasiswa"], function () {
             Route::get('/', 'mahasiswaController@index')->name('index');
             Route::get('/data', 'mahasiswaController@data')->name('data');
@@ -80,18 +83,15 @@ Route::group(['as' =>'admin.','middleware'=> 'auth'],function(){
             Route::get('/jarak_solusi_positif', 'analisaTopsis@jarak_solusi_positif')->name('jarak_solusi_positif');
             Route::get('/jarak_solusi_negatif', 'analisaTopsis@jarak_solusi_negatif')->name('jarak_solusi_negatif');
             Route::get('/nilai_preferensi', 'analisaTopsis@nilai_preferensi')->name('nilai_preferensi');
-
-            
         });
         Route::group(["as" => "setting.", "prefix" => "setting"], function () {
-            Route::post('/bobot', 'settingController@bobot')->name('bobot');            
+            Route::post('/bobot', 'settingController@bobot')->name('bobot');
         });
     });
-
 });
-Route::get('/masuk',function(){
+Route::get('/masuk', function () {
     return view('admin.login');
-}); 
+});
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
